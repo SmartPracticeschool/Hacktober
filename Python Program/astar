@@ -1,0 +1,133 @@
+def heuristic(Node):
+    hn=0
+    for i in range(len(Node)):
+        if Node[i]!=goal[i]:
+            hn=hn+1
+    return hn
+  
+    
+def up(Node,i):
+    Node=list(Node)
+    temp=Node[i]
+    Node[i]=Node[i-3]
+    Node[i-3]=temp
+    move.append("Up\n")
+    return Node
+
+def down(Node,i):
+    Node=list(Node)
+    temp=Node[i]
+    Node[i]=Node[i+3]
+    Node[i+3]=temp
+    move.append("Down\n")
+    return Node
+
+def left(Node,i):
+    Node=list(Node)
+    temp=Node[i]
+    Node[i]=Node[i-1]
+    Node[i-1]=temp
+    move.append("Left\n")
+    return Node
+
+def right(Node,i):
+    Node=list(Node)
+    temp=Node[i]
+    Node[i]=Node[i+1]
+    Node[i+1]=temp
+    move.append("Right\n")
+    return Node
+
+
+def Expand(Node):
+    index=Node.index(" ")
+    childs=[]
+    if(index-3 in range(0,9)):
+        uc=up(Node,index)
+        childs.append(uc)
+    
+        
+    if(index+3 in range(0,9)):
+        dc=down(Node,index)
+        childs.append(dc)
+        
+    if((index+1 in range(0,9)) and (index % 3 != 2)):
+        rc=right(Node,index)
+        childs.append(rc)
+    
+
+    if((index-1 in range(0,9)) and (index % 3 !=0)):
+        lc=left(Node,index)
+        childs.append(lc)
+
+
+    return childs
+
+
+def printAstar(Node):
+    print("Source")
+    for j in Node:
+        
+        for i in range(0,9,3):
+            print(j[i],j[i+1],j[i+2])
+        print(action[Node.index(j)])
+        print("cost",fc[Node.index(j)])
+
+
+action=[" "]
+closelist=[]
+move=[" "]
+gd=[]
+fc=[]
+
+def Astar(source,goal):
+    source=list(source)
+    goal=list(goal)
+    openlist = [source]
+    
+    index=0
+    
+    darray=[0]
+    
+    
+    while openlist:
+        
+        
+
+        node = openlist.pop(index)
+        depth=darray.pop(index)
+        
+        
+        moves=move.pop(index)
+        if node not in closelist:
+            closelist.append(node)
+            action.append(moves)
+            gd.append(depth)
+            fc.append(heuristic(node)+depth)
+            
+            if node==goal:
+                print("total cost is",gd[-1])
+                return closelist
+            siblings = Expand(node)
+            
+            for sibling in siblings:
+                openlist.append(sibling)
+                darray.append(depth+1)
+            min=99
+            for i in range(0,len(openlist),1):
+             if (heuristic(openlist[i])+depth)<min:
+                    min=heuristic(openlist[i])+depth
+                    index=i
+                
+                    
+                
+                
+      
+    
+Source=(2,3," ",1,8,4,7,6,5)
+goal=(1,2,3,8," ",4,7,6,5)
+action.pop(0)
+printAstar(Astar(Source,goal))
+
+
+
